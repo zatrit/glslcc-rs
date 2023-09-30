@@ -1,15 +1,12 @@
-use glslcc_rs::{Compiler, Shader, ShaderKind, glsl};
+use glslcc_rs::{glsl, Compiler, Shader, ShaderKind};
 
 fn main() {
-    let compiler = Compiler::new().unwrap();
+    let compiler = Compiler::<glsl::Target>::new().unwrap();
     let shader = compiler
-        .compile::<glsl::Target>(
-            &Shader {
-                shader_kind: ShaderKind::Vertex,
-                source: include_str!("main.vert"),
-            },
-            None,
-        )
+        .compile(Shader {
+            shader_kind: ShaderKind::Vertex,
+            source: include_str!("main.vert"),
+        })
         .unwrap();
 
     println!("{}", shader);

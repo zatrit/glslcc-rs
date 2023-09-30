@@ -6,8 +6,9 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-shaderc = { version = "0.8", features = ["build-from-source"] }
+shaderc = "0.8"
 spirv_cross = "0.23"
+trait-set = "0.3"
 
 [features]
 default = ["glsl", "hlsl", "msl"]
@@ -15,3 +16,5 @@ default = ["glsl", "hlsl", "msl"]
 glsl = ["spirv_cross/glsl"]
 hlsl = ["spirv_cross/hlsl"]
 msl = ["spirv_cross/msl"]
+
+build-shaderc = ["shaderc/build-from-source"]

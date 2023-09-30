@@ -12,7 +12,7 @@ pub use spirv_cross::hlsl;
 pub use spirv_cross::msl;
 
 pub use spirv_cross::spirv;
-use spirv_cross::spirv::Ast;
+use spirv_cross::spirv::{Ast, Target};
 
 #[derive(Debug)]
 pub enum Error {
@@ -29,24 +29,30 @@ impl Display for Error {
     }
 }
 
-pub struct Compiler<'a> {
+pub struct Compiler<'a, T>
+where
+    T: spirv::Target,
+    Ast<T>: spirv::Compile<T> + spirv::Parse<T>,
+{
     inner: shaderc::Compiler,
-    pub options: Option<shaderc::CompileOptions<'a>>,
+    pub shaderc_options: Option<shaderc::CompileOptions<'a>>,
+    pub spirv_options: Option<<Ast<T> as spirv::Compile<T>>::CompilerOptions>,
 }
 
-impl Compiler<'_> {
+impl<T: Target> Compiler<'_, T>
+where
+    T: spirv::Target,
+    Ast<T>: spirv::Compile<T> + spirv::Parse<T>,
+{
     pub fn new() -> Option<Self> {
         Some(Self {
             inner: shaderc::Compiler::new()?,
-            options: None,
+            shaderc_options: None,
+            spirv_options: None,
         })
     }
 
-    pub fn compile<T>(&self, shader: &Shader<'_>, options: Option<<Ast<T> as spirv::Compile<T>>::CompilerOptions>) -> Result<String, Error>
-    where
-        T: spirv::Target,
-        Ast<T>: spirv::Compile<T> + spirv::Parse<T>,
-    {
+    pub fn compile(&self, shader: Shader<'_>) -> Result<String, Error> {
         let Shader {
             shader_kind,
             source,
@@ -59,13 +65,15 @@ impl Compiler<'_> {
                 shader_kind.clone(),
                 "shader.glsl",
                 "main",
-                self.options.as_ref(),
+                self.shaderc_options.as_ref(),
             )
             .map_err(Error::ShaderC)?;
 
         let module = spirv::Module::from_words(artifact.as_binary());
         let mut ast = Ast::<T>::parse(&module).map_err(Error::SpirVCross)?;
-        options.as_ref().map(|o| ast.set_compiler_options(o));
+        self.spirv_options
+            .as_ref()
+            .map(|o| ast.set_compiler_options(o));
 
         ast.compile().map_err(Error::SpirVCross)
     }
