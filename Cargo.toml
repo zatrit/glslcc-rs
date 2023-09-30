@@ -1,0 +1,17 @@
+[package]
+name = "glslcc-rs"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+shaderc = { version = "0.8", features = ["build-from-source"] }
+spirv_cross = "0.23"
+
+[features]
+default = ["glsl", "hlsl", "msl"]
+
+glsl = ["spirv_cross/glsl"]
+hlsl = ["spirv_cross/hlsl"]
+msl = ["spirv_cross/msl"]
