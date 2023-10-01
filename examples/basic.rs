@@ -5,7 +5,7 @@ fn main() {
     let shader = compiler
         .compile(Shader {
             shader_kind: ShaderKind::Vertex,
-            source: include_str!("main.vert"),
+            source: include_str!("main.vert"), // include_str! can be easily replaced by the File API
         })
         .unwrap();
 

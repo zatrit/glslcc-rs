@@ -14,7 +14,10 @@ pub use spirv_cross::msl;
 pub use spirv_cross::spirv;
 use spirv_cross::spirv::{Ast, Target};
 
-#[derive(Debug)]
+/** An error wrapper that can be used within this
+ library to efficiently handle errors from
+ both [shaderc] and [spirv_cross]. */
+ #[derive(Debug)]
 pub enum Error {
     ShaderC(shaderc::Error),
     SpirVCross(spirv_cross::ErrorCode),
@@ -79,6 +82,7 @@ where
     }
 }
 
+/** A simple shader source representation. */
 pub struct Shader<'a> {
     pub shader_kind: ShaderKind,
     pub source: &'a str,
