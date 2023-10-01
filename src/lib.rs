@@ -21,9 +21,8 @@ pub enum Error {
     SpirVCross(spirv_cross::ErrorCode),
 }
 
-pub struct Compiler<'a, T>
+pub struct Compiler<'a, T: Target>
 where
-    T: spirv::Target,
     Ast<T>: spirv::Compile<T> + spirv::Parse<T>,
 {
     inner: shaderc::Compiler,
@@ -33,7 +32,6 @@ where
 
 impl<T: Target> Compiler<'_, T>
 where
-    T: spirv::Target,
     Ast<T>: spirv::Compile<T> + spirv::Parse<T>,
 {
     pub fn new() -> Option<Self> {
