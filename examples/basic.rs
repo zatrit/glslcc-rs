@@ -1,4 +1,4 @@
-use glslcc_rs::{glsl, Compiler, Shader, ShaderKind};
+use glslcc_rs::{glsl, Compiler, Shader, shaderc::ShaderKind};
 
 fn main() {
     let compiler = Compiler::<glsl::Target>::new().unwrap();

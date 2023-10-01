@@ -7,15 +7,15 @@ pub use spirv_cross::hlsl;
 #[cfg(feature = "msl")]
 pub use spirv_cross::msl;
 
-use derive_more::{Display, Error};
-pub use shaderc::ShaderKind;
+use derive_more::{Display, Error, From};
+pub use shaderc;
 pub use spirv_cross::spirv;
 use spirv_cross::spirv::{Ast, Target};
 
 /** An error wrapper that can be used within this
 library to efficiently handle errors from
 both [shaderc] and [spirv_cross]. */
-#[derive(Debug, Display, Error)]
+#[derive(Debug, Display, Error, From)]
 pub enum Error {
     ShaderC(shaderc::Error),
     SpirVCross(spirv_cross::ErrorCode),
@@ -56,14 +56,13 @@ where
                 "shader.glsl",
                 "main",
                 self.shaderc_options.as_ref(),
-            )
-            .map_err(Error::ShaderC)?;
+            )?;
 
         let module = spirv::Module::from_words(artifact.as_binary());
-        let mut ast = Ast::<T>::parse(&module).map_err(Error::SpirVCross)?;
-        self.spirv_options
-            .as_ref()
-            .map(|o| ast.set_compiler_options(o));
+        let mut ast = Ast::<T>::parse(&module)?;
+        if let Some(o) = &self.spirv_options {
+            ast.set_compiler_options(o)?;
+        }
 
         ast.compile().map_err(Error::SpirVCross)
     }
@@ -71,6 +70,6 @@ where
 
 /** A simple shader source representation. */
 pub struct Shader<'a> {
-    pub shader_kind: ShaderKind,
+    pub shader_kind: shaderc::ShaderKind,
     pub source: &'a str,
 }
