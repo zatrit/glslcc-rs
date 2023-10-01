@@ -7,7 +7,7 @@ pub use spirv_cross::hlsl;
 #[cfg(feature = "msl")]
 pub use spirv_cross::msl;
 
-use derive_more::Display;
+use derive_more::{Display, Error};
 pub use shaderc::ShaderKind;
 pub use spirv_cross::spirv;
 use spirv_cross::spirv::{Ast, Target};
@@ -15,7 +15,7 @@ use spirv_cross::spirv::{Ast, Target};
 /** An error wrapper that can be used within this
 library to efficiently handle errors from
 both [shaderc] and [spirv_cross]. */
-#[derive(Debug, Display)]
+#[derive(Debug, Display, Error)]
 pub enum Error {
     ShaderC(shaderc::Error),
     SpirVCross(spirv_cross::ErrorCode),
