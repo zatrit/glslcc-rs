@@ -3,12 +3,14 @@ name = "glslcc-rs"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+license = "Apache-2.0"
+repository = "https://github.com/zatrit/glslcc-rs"
+description = "GLSL cross-compiler library written in Rust"
+readme = "readme.md"
 
 [dependencies]
 shaderc = "0.8"
 spirv_cross = "0.23"
-trait-set = "0.3"
 
 [features]
 default = ["glsl", "hlsl", "msl"]
