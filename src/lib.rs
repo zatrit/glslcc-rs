@@ -1,7 +1,3 @@
-use std::fmt::Display;
-
-pub use shaderc::ShaderKind;
-
 #[cfg(feature = "glsl")]
 pub use spirv_cross::glsl;
 
@@ -11,25 +7,18 @@ pub use spirv_cross::hlsl;
 #[cfg(feature = "msl")]
 pub use spirv_cross::msl;
 
+use derive_more::Display;
+pub use shaderc::ShaderKind;
 pub use spirv_cross::spirv;
 use spirv_cross::spirv::{Ast, Target};
 
 /** An error wrapper that can be used within this
- library to efficiently handle errors from
- both [shaderc] and [spirv_cross]. */
- #[derive(Debug)]
+library to efficiently handle errors from
+both [shaderc] and [spirv_cross]. */
+#[derive(Debug, Display)]
 pub enum Error {
     ShaderC(shaderc::Error),
     SpirVCross(spirv_cross::ErrorCode),
-}
-
-impl Display for Error {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Error::ShaderC(e) => e.fmt(f),
-            Error::SpirVCross(e) => e.fmt(f),
-        }
-    }
 }
 
 pub struct Compiler<'a, T>

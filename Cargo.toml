@@ -1,6 +1,6 @@
 [package]
 name = "glslcc-rs"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 
 license = "Apache-2.0"
@@ -9,6 +9,7 @@ description = "GLSL cross-compiler library written in Rust"
 readme = "readme.md"
 
 [dependencies]
+derive_more = { version = "0.99", default-features = false, features = ["display"] }
 shaderc = "0.8"
 spirv_cross = "0.23"
 
