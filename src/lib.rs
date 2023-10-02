@@ -48,15 +48,13 @@ where
             source,
         } = shader;
 
-        let artifact = self
-            .inner
-            .compile_into_spirv(
-                source,
-                shader_kind.clone(),
-                "shader.glsl",
-                "main",
-                self.shaderc_options.as_ref(),
-            )?;
+        let artifact = self.inner.compile_into_spirv(
+            source,
+            shader_kind.clone(),
+            "anonymous file",
+            "main",
+            self.shaderc_options.as_ref(),
+        )?;
 
         let module = spirv::Module::from_words(artifact.as_binary());
         let mut ast = Ast::<T>::parse(&module)?;
